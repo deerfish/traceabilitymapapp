@@ -50,7 +50,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
   </button>
 
   <button
-    class="viz-chain-resource-button viz-chain-resource-list-10-button"
+    class="viz-chain-resource-button viz-chain-resource-list-10-button "
     data-resourcechain="viz-chain-resource-list-10"
     data-mapchainelements="viz-map-chain-10"
   >

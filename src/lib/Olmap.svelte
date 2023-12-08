@@ -13,15 +13,11 @@
   import {createEmpty, extend, getHeight, getWidth} from 'ol/extent.js';
   // import { Polygon } from "ol/geom";
   import Icon from "ol/style/Icon";
-
-
-  // TODO: When a resource button is clicked, zoom to the area where the overlay items for this specific resource chain are set on the map.
-  // In order to make this work create a vector layer with a polygon for every chain 
-  // (at the moment, all elements in the overlay are treated as one). 
-  // Map the resource button for the chain with the corresponding vector layer (with the polygon for this chain.)
+  import Layer from "ol/layer/Layer";
 
   let map = null;
   let mapDiv = "viz-map";
+  let resourceButtons; // will be set on map init.
 
   // Init the maps view.
   const mapView = new View({
@@ -49,7 +45,7 @@
     // For testing purpose, set stroke and fill to a color.
     'mapChainElementsPolygon': new Style({
         stroke: new Stroke({
-          color: 'white',
+          color: 'transparent',
           lineDash: [4],
           width: 2,
         }),
@@ -176,68 +172,168 @@
     // The value of this attribute binds all the map elements
     // of a chain together in a class of the attributes value.
 
-    const resourceButtons = document. querySelectorAll('#viz-chain-main-resources-button-list .viz-chain-resource-button')
-
-
-    // Get all the elements that should be shown as overlays.
-    const chainElements = document.querySelectorAll(
-      ".viz-map-chain-item-container",
-    );
-
-    // Collection of all positions on the map.
-    let polygonCoordinates = [];
-
-    for (let idx = 0; idx < chainElements.length; idx++) {
-      const elId = chainElements[idx].id;
-      const chainEl = document.getElementById(elId);
-
-      // We have to transform the lon/lat values to the destination projection.
-      polygonCoordinates.push(transform(chainEl.dataset.lonlat.split(","), 'EPSG:4326', 'EPSG:3857'));
-      
-      // Place the chain element on the map as an overlay.
-      showChainOverlay(chainEl);
+    // const resourceButtons = document.querySelectorAll('#viz-chain-main-resources-button-list .viz-chain-resource-button');
+    let resourceChains = [];
+    
+    for (let idx = 0; idx < resourceButtons.length; idx++) {
+      let chainName = resourceButtons[idx].dataset.mapchainelements;
+      let chainInfo = {
+        'chainName': chainName,
+        'active': resourceButtons[idx].classList.contains('active') ? true : false,
+        'polygonLayerName': 'polygonLayer' + chainName,
+        'polygonCoordinates': []
+      };
+      resourceChains.push(chainInfo);
     }
 
-    // Add the first point of the polygon again in order to close it.
-    polygonCoordinates.push(polygonCoordinates[0]);
+    // console.log(resourceChains);
 
-    // Create the feature collection for the vector layer.
-    let featureData = {
-      'type': 'FeatureCollection',
-      'features': [
-        {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Polygon',
-            'coordinates': [
-              polygonCoordinates,
-            ],
-          }
+    // For every chain, add the map items as overlay on the map
+    // and create a vector layer with a polygon.
+    for(let idx = 0; idx < resourceChains.length; idx++) {
+      let currentResourceChain = resourceChains[idx];
+
+      // Get all the elements that should be shown as overlays.
+      const chainElements = document.querySelectorAll(
+        '.viz-map-chain-item-container' + '.' + currentResourceChain.chainName
+      );
+
+      // console.log(chainElements);
+
+      if(chainElements.length > 0) {
+
+        // Collection of all positions on the map.
+        let polygonCoordinates = [];
+
+        for (let idx = 0; idx < chainElements.length; idx++) {
+          const elId = chainElements[idx].id;
+          const chainEl = document.getElementById(elId);
+
+          // We have to transform the lon/lat values to the destination projection.
+          polygonCoordinates.push(transform(chainEl.dataset.lonlat.split(","), 'EPSG:4326', 'EPSG:3857'));
+          
+          // Place the chain element on the map as an overlay.
+          showChainOverlay(chainEl);
         }
-      ]
-    };
 
-    // Create a polygon geometry feature out of all the chain elements positions.
+        // Add the first point of the polygon again in order to close it.
+        polygonCoordinates.push(polygonCoordinates[0]);
+        
+        currentResourceChain.polygonCoordinates = polygonCoordinates;
 
-    // Create the vector source object with the feature collection.
-    const vectorSource = new VectorSource({
-      features: new GeoJSON().readFeatures(featureData),
-    });
-    // ... and the vector layer for the polygon.
-    const mapOverlyItemsVectorLayerPolygon = new VectorLayer({
-      source: vectorSource,
-      style: function (feature) {
-              // console.log(feature);
-              return styleForVectorLayer['mapChainElementsPolygon'];
-            },
-    });
-    map.addLayer(mapOverlyItemsVectorLayerPolygon);
+        // Create the feature collection for the vector layer.
+        let featureData = {
+          'type': 'FeatureCollection',
+          'features': [
+            {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Polygon',
+                'coordinates': [
+                  currentResourceChain.polygonCoordinates,
+                ],
+              }
+            }
+          ]
+        };
 
-    // Zoom to the extent of the vector layer with the polygon of the map items.
-    let vectorLayerExtent = mapOverlyItemsVectorLayerPolygon.getSource().getExtent();
+        // Create a polygon geometry feature out of all the chain elements positions.
+        
+        // Create the vector source object with the feature collection.
+        const vectorSource = new VectorSource({
+          features: new GeoJSON().readFeatures(featureData),
+        });
+
+          // ... and the vector layer for the polygon.
+        const mapOverlyItemsVectorLayerPolygon = new VectorLayer({
+          properties: {
+            name: currentResourceChain.chainName
+          }, 
+          source: vectorSource,
+          style: function (feature) {
+                  // console.log(feature);
+                  return styleForVectorLayer['mapChainElementsPolygon'];
+                },
+        });
+        map.addLayer(mapOverlyItemsVectorLayerPolygon);
+
+        // If the current chain is active, zoom to it.
+        if(currentResourceChain.active) {
+          const vectorLayerExtent = mapOverlyItemsVectorLayerPolygon.getSource().getExtent();
+          const featureExtent = createEmpty();
+          extend(featureExtent, vectorLayerExtent);
+          map.getView().fit(featureExtent, {duration: 800, padding: [150, 250, 150, 100]});      
+        }
+        
+      }
+    }
+  }
+
+
+  /**
+   * Looks for the layer with the layer name passed by layerName
+   * and zooms the map to its extent.
+   * 
+   * @param layerName
+   */
+  function zoomToLayer(layerName) {
+    // Zoom to the extent of the vector layer that belongs to the active resource chain.
+    let layerToZoomTo = map.getLayers().getArray().find(layer => layer.get('name') == layerName); // viz-map-chain-yarn-159
+    const vectorLayerExtent = layerToZoomTo.getSource().getExtent();
     const featureExtent = createEmpty();
     extend(featureExtent, vectorLayerExtent);
     map.getView().fit(featureExtent, {duration: 800, padding: [150, 250, 150, 100]});
+  }
+
+
+
+  /**
+   * When a resource button is clicked, zoom to the area where the overlay items for this specific resource chain are set on the map.
+   * In order to make this work create a vector layer with a polygon for every chain 
+   * Map the resource button for the chain with the corresponding vector layer (with the polygon for this chain.)
+   */
+  function addClickEventToResourceButtons() {
+    for (let idx = 0; idx < resourceButtons.length; idx++) {
+      let buttonEl = resourceButtons[idx];
+      buttonEl.addEventListener("click", function (e) {
+        const currentEl = e.currentTarget;
+        const chainName = currentEl.dataset.mapchainelements;
+        zoomToLayer(chainName);
+        // TODO: always hide the layers of the data loaded additionally by the map elements.
+        console.log(map.getLayers().getArray());
+        removeLayersByName('featuresLoadedByMapElement');
+        console.log(map.getLayers().getArray());
+      });
+    }
+  }
+
+
+  function removeLayersByName(layerName) {
+    let layers = map.getLayers();
+
+    layers.forEach(layer => {
+        if (layer != undefined) {
+            if (layer.get('name') != undefined) {
+                if (layer.get('name') == layerName) {
+                    if (layer.getSource()) {
+                        layer.getSource().clear();
+                    }
+                }
+            }
+        }
+    });
+
+    // ... then remove the layers.
+    layers.forEach(layer => {
+        if (layer != undefined) {
+            if (layer.get('name') != undefined) {
+                if (layer.get('name') == layerName) {
+                    map.removeLayer(layer)
+                }
+            }
+        }
+    });
+    
   }
 
 
@@ -248,7 +344,7 @@
    * data to the map on a individual vector layer.
    * TODO: Ones loaded, the layer will only be toggled on click.
    */
-  function createLoadingEvents() {
+  function createDataLoadingForChainElements() {
 
     const chainResourceItemsForMapPlaces = document.getElementsByClassName(
       "viz-chain-element viz-load-map-places",
@@ -281,22 +377,28 @@
       e.preventDefault();
       const currentEl = e.currentTarget;
       let dataUrl = currentEl.dataset.load;
+
+      removeLayersByName('featuresLoadedByMapElement');
       
       if (dataUrl) {
+        // First of all, delete already created layers made by map elements.
         let layerSource = new VectorSource({
-            url: dataUrl,
-            format: new GeoJSON(),
-          });
-          layerSource.on('featuresloadend', function(e) {
-            // Zoom the map to the extent of the features loaded.
-            let vectorLayerExtent = mapPlacesVectorLayer.getSource().getExtent();
-            const featureExtent = createEmpty();
-            extend(featureExtent, vectorLayerExtent);
-            map.getView().fit(featureExtent, {duration: 800, padding: [100, 100, 100, 100]});
-          });
+          url: dataUrl,
+          format: new GeoJSON(),
+        });
+        layerSource.on('featuresloadend', function(e) {
+          // Zoom the map to the extent of the features loaded.
+          let vectorLayerExtent = mapPlacesVectorLayer.getSource().getExtent();
+          const featureExtent = createEmpty();
+          extend(featureExtent, vectorLayerExtent);
+          map.getView().fit(featureExtent, {duration: 800, padding: [100, 100, 100, 100]});
+        });
         // The data loading is managed by the VectorSource object!
         const mapPlacesVectorLayer = new VectorLayer({
           source: layerSource,
+          properties: {
+            name: 'featuresLoadedByMapElement'
+          },
           style: function (feature) {
               // return styleForVectorLayer['cottonIcon'];
               return cottonIconWithTextStyle(feature);
@@ -314,8 +416,9 @@
    * @param _id
    */
   const initMap = (_id) => {
+
     map = new Map({
-      target: _id,
+      target: 'viz-map',
       layers: [
         new TileLayer({
           source: new OSM(),
@@ -325,10 +428,13 @@
     });
 
     // Create a layer for the traceability elements.
+    resourceButtons = document.querySelectorAll('#viz-chain-main-resources-button-list .viz-chain-resource-button');
     createChainOverlays();
-    createLoadingEvents();
+    createDataLoadingForChainElements();
+    addClickEventToResourceButtons();
 
   };
+
 </script>
 
 <div id={mapDiv} class="viz-map" use:initMap={mapDiv} />
