@@ -89,7 +89,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-process-5"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 viz-load-map-places active"
       data-lonlat="34.033119,-3.318231"
-      data-load="
+      data-loadplaces="
   https://mytrace-12-1.ddev.site/trace/map-places/freecomponent-5.json?cHash=5cde667b74e7325c7a19afb56527d43f
 "
     >
@@ -134,7 +134,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-process-15"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="34.234831,-3.520129"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/process-15.data?cHash=f1c23bedea89faaefdc0eeccfc82f4fe
 "
     >
@@ -179,7 +179,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-process-14"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="34.30812,-3.544408"
-      data-load="
+      data-loaddetails="
     https://mytrace-12-1.ddev.site/trace/resource-info/process-14.data?cHash=67aeea5c8412521a2c2882f31279aa2c
   "
     >
@@ -265,7 +265,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-process-14"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="34.30812,-3.544408"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/process-14.data?cHash=67aeea5c8412521a2c2882f31279aa2c
 "
     >
@@ -351,7 +351,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-supplier-49"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="25.64737580719044,41.96442788554126"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-482.data?cHash=3f11cb0fa9aa911669828b1ba70174b4
 "
     >
@@ -375,7 +375,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-supplier-47"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="24.742859127493286,42.17005248463962"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-481.data?cHash=050b64a7f72fb14f90ea8e4e2e6dbdbf
 "
     >
@@ -418,7 +418,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-yarn-159-item-supplier-20"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="24.787211,42.149992"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-480.data?cHash=435bab46e08c5a54c49f84d8af391cec
 "
     >
@@ -480,7 +480,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       class="viz-map-chain-item-container viz-map-chain-yarn-159 active"
       data-lonlat="7.598398,47.542961"
       data-mapcenter="7.598398,47.542961"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/brand-5.data?cHash=394fb19bfab4d15d82359d73d77e6060
 "
     >
@@ -504,7 +504,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-10-item-process-22"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="13.615678903707018,47.97884433919469"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/process-22.data?cHash=f9b8ff8c950af08aac025fae41cfb95e
 "
     >
@@ -521,7 +521,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-10-item-process-10"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="-8.35261,41.37878"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-484.data?cHash=1cdef568189e2faf612f5bb003281544
 "
     >
@@ -700,7 +700,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-10-item-process-25"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="25.64737580719044,41.96442788554126"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-482.data?cHash=3f11cb0fa9aa911669828b1ba70174b4
 "
     >
@@ -724,7 +724,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-10-item-process-8"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="24.742859127493286,42.17005248463962"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-481.data?cHash=050b64a7f72fb14f90ea8e4e2e6dbdbf
 "
     >
@@ -767,7 +767,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       id="viz-map-chain-10-item-process-6"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="24.787211,42.149992"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-480.data?cHash=435bab46e08c5a54c49f84d8af391cec
 "
     >
@@ -829,7 +829,7 @@ c81.4-7.5,99.5-50,103.5-65.9C231,139.6,228.7,136.4,225.4,135.9z"
       class="viz-map-chain-item-container viz-map-chain-10 active"
       data-lonlat="7.598398,47.542961"
       data-mapcenter="7.598398,47.542961"
-      data-load="
+      data-loaddetails="
   https://mytrace-12-1.ddev.site/trace/resource-info/supplierbyprocess-480.data?cHash=435bab46e08c5a54c49f84d8af391cec
 "
     >

@@ -299,10 +299,8 @@
         const currentEl = e.currentTarget;
         const chainName = currentEl.dataset.mapchainelements;
         zoomToLayer(chainName);
-        // TODO: always hide the layers of the data loaded additionally by the map elements.
-        console.log(map.getLayers().getArray());
+        // Always remove the layers with loaded data from the map elements.
         removeLayersByName('featuresLoadedByMapElement');
-        console.log(map.getLayers().getArray());
       });
     }
   }
@@ -376,7 +374,8 @@
     chainItem.addEventListener("click", function (e) {
       e.preventDefault();
       const currentEl = e.currentTarget;
-      let dataUrl = currentEl.dataset.load;
+      // The URL to load additional "feature data" is saved on the elements data-load property.
+      let dataUrl = currentEl.dataset.loadplaces;
 
       removeLayersByName('featuresLoadedByMapElement');
       
