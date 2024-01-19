@@ -19,6 +19,61 @@
   let mapDiv = "viz-map";
   let resourceButtons; // will be set on map init.
 
+  
+  /**
+   * Create an observer to react to changes in the path stepper.
+   * The path stepper saves the currently active slide in a
+   * data attribute of the path stepper sliding bar.
+   */
+  function startPathStepperObserving() {
+    const pathStepperSlidingBar = document.getElementById('viz-path-stepper-sliding-bar');
+
+    // Add an observer for the path stepper sliding
+    if(pathStepperSlidingBar) {
+      const observer = new MutationObserver(records => {
+        for(let record of records) {
+          if (record.type === 'attributes') {
+            let currentlyActiveStepId = pathStepperSlidingBar.dataset.activechainitemid;
+            if(currentlyActiveStepId) {
+              // Look for an item on the map that corresponds to the set ID
+              // and zoom to map to it.
+              let objectTooZoomTo = document.getElementById('viz-map-chain-' + currentlyActiveStepId);
+              if(objectTooZoomTo) {
+                const lonLatData = objectTooZoomTo.dataset.lonlat.split(",");
+                if (lonLatData.length > 0 && lonLatData[0]) {
+                  const centerPos = fromLonLat(lonLatData);
+                  let zoomLevel = pathStepperSlidingBar.dataset.highlightzoomlevel;
+                  if(zoomLevel === null) {
+                      zoomLevel = 8;
+                  }
+                  mapView.animate({center: centerPos}, {zoom: zoomLevel}, () => {
+                    // The Decluster function is profided by the traceability website!
+                    if(typeof declusterMapElements === 'function') {
+                      declusterMapElements();
+                      // Reset the highlighting of map elements.
+                      const chainElements = document.querySelectorAll('.viz-map-chain-item-content');
+                      if(chainElements.length + 0) {
+                        for (let idx = 0; idx < chainElements.length; idx++) {
+                          chainElements[idx].classList.remove('highlight');
+                        }
+                      }  
+                      objectTooZoomTo.querySelector('.viz-map-chain-item-content').classList.add('highlight');
+                    }
+                  });
+                }
+              }
+            }
+          }
+        }
+
+      });
+      
+      observer.observe(pathStepperSlidingBar, {attributes: true});
+    }
+  }
+
+  
+
   // Init the maps view.
   const mapView = new View({
     center: [0, 0],
@@ -128,7 +183,7 @@
 
 
   /**
-   * Create the chain overlay with the boxes.
+   * Creates a chain overlay box.
    * 
    * @param chainEl: HTMLElement
    */
@@ -347,17 +402,26 @@
     const chainResourceItemsForMapPlaces = document.getElementsByClassName(
       "viz-chain-element viz-load-map-places",
     );
+    
     const mapChainResourceItemsForMapPlaces = document.getElementsByClassName(
       "viz-map-chain-item-container viz-load-map-places",
     );
+    
+    const pathStepperResourceItems = document.querySelectorAll(
+      '.viz-path-stepper-section .viz-path-stepper-section-item-content'
+    );
 
-    // Add the data loading click event on the chain items.
+    // Add the data loading click event on the chain items ...
     for (let i = 0; i < chainResourceItemsForMapPlaces.length; i++) {
       addDataLoaderEvents(chainResourceItemsForMapPlaces[i]);
     }
-
+    // ... and on the items on the map ...
     for (let i = 0; i < mapChainResourceItemsForMapPlaces.length; i++) {
       addDataLoaderEvents(mapChainResourceItemsForMapPlaces[i]);
+    }
+    // ... and in the path stepper items.
+    for (let i = 0; i < pathStepperResourceItems.length; i++) {
+      addDataLoaderEvents(pathStepperResourceItems[i]);
     }
   }
 
@@ -431,7 +495,7 @@
     createChainOverlays();
     createDataLoadingForChainElements();
     addClickEventToResourceButtons();
-
+    startPathStepperObserving();
   };
 
 </script>

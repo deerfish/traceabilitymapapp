@@ -1,3 +1,5 @@
+<div id="viz-path-stepper-sliding-bar" data-highlightzoomlevel="4"></div>
+
 <div
   id="viz-chain-main-resources-button-list"
   class="viz-chain-resources-button-list"

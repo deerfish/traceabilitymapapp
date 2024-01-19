@@ -1,6 +1,6 @@
 <script>
   import MapData from './lib/MapData.svelte';
-  import OlMap from './lib/Olmap.svelte'
+  import OlMap from './lib/OlMap.svelte'
 </script>
 
 <main>
